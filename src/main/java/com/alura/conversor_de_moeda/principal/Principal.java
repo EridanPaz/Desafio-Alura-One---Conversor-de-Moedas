@@ -1,7 +1,6 @@
 package com.alura.conversor_de_moeda.principal;
 
 import com.alura.conversor_de_moeda.service.ConverterMoeda;
-import com.alura.conversor_de_moeda.service.ConverterDado;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -9,10 +8,10 @@ import java.util.Scanner;
 public class Principal {
   private Scanner leitor              = new Scanner(System.in);
   private ConverterMoeda conversor    = new ConverterMoeda();
-  private ConverterDado converterDado = new ConverterDado();
   private String enderecoAPIConversor = "https://v6.exchangerate-api.com/v6/b0ecb1cf47b99d0620247b1b/pair/";
   private String baseAndTarget        = "";
-  double valor                        = 0;
+  private double valor                = 0;
+  private String soOValorConvertido;
   
   public void menu(){
     int opcao    = -1;
@@ -34,12 +33,14 @@ public class Principal {
       try {
         System.out.println(opcoes);
         opcao = leitor.nextInt();
-        leitor.nextLine();
+//        leitor.nextLine();
         
-        valor = leitor.nextDouble();
-        
-        if (valor > 0) {
+        if (opcao > 0) {
+          System.out.println("Retornar só o valor convertido (S/N?");
+          soOValorConvertido = leitor.nextLine();
+          
           System.out.println("Informe o valor para conversão:");
+          valor = leitor.nextDouble();
         }
         
         switch (opcao){
@@ -81,11 +82,15 @@ public class Principal {
     
     System.out.println(urlBaseTargetValor);
     
-    String moedaBase = urlBaseTargetValor.substring(65,68);
-    String moedaAlvo = urlBaseTargetValor.substring(69,72);
+    String moedaBase = urlBaseTargetValor.substring(65, 68);
+    String moedaAlvo = urlBaseTargetValor.substring(69, 72);
     
-    PrincipalConversor valorConvetido = conversor.Converter(urlBaseTargetValor);
+    if (soOValorConvertido == "S") {
+        ApenasOValorConvertidoDTO valorConvetido = conversor.retorarSoOValorConvertido(urlBaseTargetValor);
+      
+        System.out.println("O valor de: " + moedaBase + valor + " convertido para " + moedaAlvo + " é: " + moedaAlvo + valorConvetido);
+    }
     
-    System.out.println("O valor de: " + moedaBase + valor + " convertido para " + moedaAlvo + " é: " + moedaAlvo + valorConvetido );
+    System.out.println(conversor.retornarDadosCompletos(urlBaseTargetValor));
   }
 }

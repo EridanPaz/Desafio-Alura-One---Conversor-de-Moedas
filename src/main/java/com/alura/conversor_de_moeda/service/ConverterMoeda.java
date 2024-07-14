@@ -1,33 +1,33 @@
 package com.alura.conversor_de_moeda.service;
 
-import com.alura.conversor_de_moeda.principal.PrincipalConversor;
+import com.alura.conversor_de_moeda.principal.ApenasOValorConvertidoDTO;
+import com.alura.conversor_de_moeda.principal.TodosOsValoresDTO;
 import com.google.gson.Gson;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
 public class ConverterMoeda {
   
-  public PrincipalConversor Converter(String enderecoAPI){
+  private ConsultarApi response = new ConsultarApi();
+  private Gson gson             = new Gson();
+  
+  private String acessarApi(String enderecoAPI){
     
-    Gson json = new Gson();
+    String json = response.pesquisar(enderecoAPI);
     
-    HttpClient client   = HttpClient.newHttpClient();
-    HttpRequest request = HttpRequest.newBuilder()
-      .uri(URI.create(enderecoAPI))
-      .build();
-    HttpResponse<String> response  = null;
-    
-    try {
-      response = client.send(request, HttpResponse.BodyHandlers.ofString());
-    } catch (IOException | InterruptedException e) {
-      System.out.println("Ocorreu um erro ao pesquisar na API: " + enderecoAPI);
-    }
-    
-    return json.fromJson(response.body(), PrincipalConversor.class);
-    
+    return json;
   }
+  
+  public ApenasOValorConvertidoDTO retorarSoOValorConvertido(String enderecoAPI) {
+    
+    String json = acessarApi(enderecoAPI);
+    
+    return gson.fromJson(json, ApenasOValorConvertidoDTO.class);
+  }
+  
+  public TodosOsValoresDTO retornarDadosCompletos(String enderecoAPI){
+    
+    String json = acessarApi(enderecoAPI);
+    
+    return gson.fromJson(json, TodosOsValoresDTO.class);
+  }
+  
 }
