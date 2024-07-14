@@ -33,7 +33,6 @@ public class Principal {
       try {
         System.out.println(opcoes);
         opcao = leitor.nextInt();
-//        leitor.nextLine();
         
         if (opcao > 0) {
           System.out.println("Retornar só o valor convertido (S/N?");
@@ -85,7 +84,7 @@ public class Principal {
     String moedaBase = urlBaseTargetValor.substring(65, 68);
     String moedaAlvo = urlBaseTargetValor.substring(69, 72);
     
-    if (soOValorConvertido == "S") {
+    if (soOValorConvertido.toUpperCase() == "S") {
         ApenasOValorConvertidoDTO valorConvetido = conversor.retorarSoOValorConvertido(urlBaseTargetValor);
       
         System.out.println("O valor de: " + moedaBase + valor + " convertido para " + moedaAlvo + " é: " + moedaAlvo + valorConvetido);
